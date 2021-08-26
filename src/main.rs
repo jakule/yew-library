@@ -1,3 +1,4 @@
+use serde::{Deserialize, Serialize};
 use yew::prelude::*;
 
 enum Msg {
@@ -48,24 +49,32 @@ impl Component for Model {
     }
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+struct Book {
+    id: i32,
+    title: String,
+    authors: Vec<String>,
+    publication_date: chrono::NaiveDate,
+}
+
 enum TestReqMsg {
-    SetFetchState(String),
+    SetFetchState(Vec<Book>),
     Fetch,
 }
 
 struct TestReq {
-    response: String,
+    response: Vec<Book>,
 }
 
-impl From<String> for TestReqMsg {
-    fn from(s: String) -> Self {
+impl From<Vec<Book>> for TestReqMsg {
+    fn from(s: Vec<Book>) -> Self {
         TestReqMsg::SetFetchState(s)
     }
 }
 
-async fn fetch_data() -> String {
-    let resp = reqwest::get("https://httpbin.org/ip").await;
-    return resp.unwrap().text().await.unwrap();
+async fn fetch_data() -> Vec<Book> {
+    let resp = reqwest::get("http://localhost:8081/api/books").await;
+    return resp.unwrap().json().await.unwrap();
 }
 
 impl Component for TestReq {
@@ -73,9 +82,7 @@ impl Component for TestReq {
     type Properties = ();
 
     fn create(_ctx: &Context<Self>) -> Self {
-        Self {
-            response: "".to_string(),
-        }
+        Self { response: vec![] }
     }
 
     fn update(&mut self, ctx: &Context<Self>, msg: Self::Message) -> bool {
@@ -96,9 +103,10 @@ impl Component for TestReq {
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
             <div>
-                <button onclick={ctx.link().callback(|_| TestReqMsg::Fetch)}>{"Get IP"}</button>
+                <button type="button" class="btn btn-primary" onclick={ctx.link().callback(|_| TestReqMsg::Fetch)}>{"Get IP"}</button>
                 <p>{"REST response:"}</p>
-                <p>{ self.response.clone() }</p>
+                <p>{ for self.response.iter().map(
+                |e| html! { <p> {format!("{:?}", e) } </p> } )  }</p>
             </div>
         }
     }
