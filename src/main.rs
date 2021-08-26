@@ -81,7 +81,9 @@ impl Component for TestReq {
     type Message = TestReqMsg;
     type Properties = ();
 
-    fn create(_ctx: &Context<Self>) -> Self {
+    fn create(ctx: &Context<Self>) -> Self {
+        ctx.link().send_message(TestReqMsg::Fetch);
+
         Self { response: vec![] }
     }
 
@@ -102,13 +104,35 @@ impl Component for TestReq {
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
-            <div>
-                <button type="button" class="btn btn-primary" onclick={ctx.link().callback(|_| TestReqMsg::Fetch)}>{"Get IP"}</button>
-                <p>{"REST response:"}</p>
-                <p>{ for self.response.iter().map(
-                |e| html! { <p> {format!("{:?}", e) } </p> } )  }</p>
-            </div>
-        }
+                  <div>
+                      <button type="button" class="btn btn-primary" onclick={ctx.link().callback(|_| TestReqMsg::Fetch)}>{"Get IP"}</button>
+                      <p>{"REST response:"}</p>
+                  <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">{"#"}</th>
+            <th scope="col">{"Title"}</th>
+            <th scope="col">{"Authors"}</th>
+            <th scope="col">{"Publication Date"}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+              for self.response.iter().map(
+          |e| html! {
+              <tr>
+                 <th scope="row">{e.id}</th>
+                 <th>{&e.title}</th>
+                 <th>{format!("{:?}", e.authors)}</th>
+                 <th>{format!("{}", e.publication_date)}</th>
+              </tr>
+              }
+            )
+          }
+          </tbody>
+          </table>
+          </div>
+              }
     }
 }
 
