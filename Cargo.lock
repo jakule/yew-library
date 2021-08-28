@@ -288,6 +288,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ab5ef0d4909ef3724cc8cce6ccc8572c5c817592e9285f5464f8e86f8bd3726e"
 
 [[package]]
+name = "heck"
+version = "0.3.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6d621efb26863f0e9924c6ac577e8275e5e6b77455db64ffa6c65c904e9e132c"
+dependencies = [
+ "unicode-segmentation",
+]
+
+[[package]]
 name = "http"
 version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -745,6 +754,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "route-recognizer"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "824172f0afccf3773c3905f5550ac94572144efe0deaf49a1f22bbca188d193e"
+
+[[package]]
 name = "ryu"
 version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1007,6 +1022,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "unicode-segmentation"
+version = "1.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8895849a949e7845e06bd6dc1aa51731a103c42707010a5b591c0038fb73385b"
+
+[[package]]
 name = "unicode-xid"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1125,6 +1146,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "weblog"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6eec0958e0181982bc8b4577b1363f21300a670603615c58643f172c92c47357"
+dependencies = [
+ "wasm-bindgen",
+ "web-sys",
+ "weblog-proc-macro",
+]
+
+[[package]]
+name = "weblog-proc-macro"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9d9abb8ee84ede5408a346721d72fb216a27f53a539ff3c83ed1bf7625af7104"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "winapi"
 version = "0.3.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1158,7 +1201,7 @@ dependencies = [
 [[package]]
 name = "yew"
 version = "0.18.0"
-source = "git+https://github.com/yewstack/yew#4e974dad9282eb765738394b8ee6c6a7d9baa2d9"
+source = "git+https://github.com/yewstack/yew?branch=master#a9833ad331eafa5ca0911f1c0a4f04350fcc27b7"
 dependencies = [
  "anyhow",
  "anymap",
@@ -1187,16 +1230,46 @@ dependencies = [
  "chrono",
  "reqwest",
  "serde",
+ "web-sys",
  "yew",
+ "yew-router",
 ]
 
 [[package]]
 name = "yew-macro"
 version = "0.18.0"
-source = "git+https://github.com/yewstack/yew#4e974dad9282eb765738394b8ee6c6a7d9baa2d9"
+source = "git+https://github.com/yewstack/yew?branch=master#a9833ad331eafa5ca0911f1c0a4f04350fcc27b7"
 dependencies = [
  "boolinator",
  "lazy_static",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "yew-router"
+version = "0.15.0"
+source = "git+https://github.com/yewstack/yew?branch=master#a9833ad331eafa5ca0911f1c0a4f04350fcc27b7"
+dependencies = [
+ "gloo",
+ "js-sys",
+ "route-recognizer",
+ "serde",
+ "serde_urlencoded",
+ "wasm-bindgen",
+ "web-sys",
+ "weblog",
+ "yew",
+ "yew-router-macro",
+]
+
+[[package]]
+name = "yew-router-macro"
+version = "0.15.0"
+source = "git+https://github.com/yewstack/yew?branch=master#a9833ad331eafa5ca0911f1c0a4f04350fcc27b7"
+dependencies = [
+ "heck",
  "proc-macro2",
  "quote",
  "syn",

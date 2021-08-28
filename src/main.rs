@@ -1,5 +1,24 @@
 use serde::{Deserialize, Serialize};
 use yew::prelude::*;
+use yew_router::prelude::*;
+use web_sys;
+
+#[derive(Routable, PartialEq, Clone, Debug)]
+pub enum Route {
+    #[at("/posts/:id")]
+    Post { id: u64 },
+    #[at("/posts")]
+    Posts,
+    #[at("/authors/:id")]
+    Author { id: u64 },
+    #[at("/authors")]
+    Authors,
+    #[at("/")]
+    Home,
+    #[not_found]
+    #[at("/404")]
+    NotFound,
+}
 
 enum Msg {
     AddOne,
@@ -72,8 +91,19 @@ impl From<Vec<Book>> for TestReqMsg {
     }
 }
 
+fn get_current_url() -> String {
+    let window = web_sys::window().unwrap();
+    let location = window.location();
+    let host = location.host().unwrap();
+    let protocol = location.protocol().unwrap();
+
+    return format!("{}{}", protocol, host)
+}
+
 async fn fetch_data() -> Vec<Book> {
-    let resp = reqwest::get("http://localhost:8081/api/books").await;
+    let url = get_current_url();
+
+    let resp = reqwest::get(&format!("{}/api/books", url)).await;
     return resp.unwrap().json().await.unwrap();
 }
 
@@ -104,10 +134,10 @@ impl Component for TestReq {
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         html! {
-                  <div>
-                      <button type="button" class="btn btn-primary" onclick={ctx.link().callback(|_| TestReqMsg::Fetch)}>{"Get IP"}</button>
-                      <p>{"REST response:"}</p>
-                  <table class="table">
+          <div>
+              <button type="button" class="btn btn-primary" onclick={ctx.link().callback(|_| TestReqMsg::Fetch)}>{"Get Books"}</button>
+              <p>{"REST response:"}</p>
+          <table class="table">
         <thead>
           <tr>
             <th scope="col">{"#"}</th>
@@ -136,6 +166,40 @@ impl Component for TestReq {
     }
 }
 
+fn switch(routes: &Route) -> Html {
+    // let onclick_callback = Callback::from(|_: Route| yew_router::push_route(Route::Home));
+    match routes {
+        Route::Home => html! { <Model/> },
+        // Route::Secure => html! {
+        //     <div>
+        //         <h1>{ "Secure" }</h1>
+        //         <button onclick={onclick_callback}>{ "Go Home" }</button>
+        //     </div>
+        // },
+        Route::NotFound => html! { <h1>{ "404" }</h1> },
+
+        _ => html! { <></> },
+    }
+}
+
+struct Home {}
+
+impl Component for Home {
+    type Message = ();
+    type Properties = ();
+
+    fn create(_ctx: &Context<Self>) -> Self {
+        Home {}
+    }
+
+    fn view(&self, _ctx: &Context<Self>) -> Html {
+        html! {
+            <Router<Route> render={Router::render(switch)} />
+        }
+    }
+}
+
 fn main() {
-    yew::start_app::<Model>();
+    web_sys::console::log_1(&"Start".into());
+    yew::start_app::<Home>();
 }
