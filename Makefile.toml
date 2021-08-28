@@ -1,0 +1,7 @@
+[tasks.serve]
+command = "trunk"
+args = ["serve", "--port", "8081", "--proxy-backend", "http://localhost:8080", "--proxy-rewrite", "/api"]
+
+[tasks.release]
+command = "trunk"
+args = ["build", "--release"]
