@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
 use yew::prelude::*;
 use yew_router::prelude::*;
-use web_sys;
 
 #[derive(Routable, PartialEq, Clone, Debug)]
 pub enum Route {
@@ -97,7 +96,7 @@ fn get_current_url() -> String {
     let host = location.host().unwrap();
     let protocol = location.protocol().unwrap();
 
-    return format!("{}{}", protocol, host)
+    return format!("{}{}", protocol, host);
 }
 
 async fn fetch_data() -> Vec<Book> {
